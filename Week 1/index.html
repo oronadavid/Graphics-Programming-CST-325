@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+        let canvas;
+        let currentFrameNumber = 0;
+        const sceneList = [];
+
+        function init() {
+            console.log("Hello world!")
+            canvas = document.getElementById("myCanvas");
+            const newRectangleInstance = new Rectangle(20, 20, "rgb(0, 255, 0)");
+            const newRectangleInstance2 = new Rectangle(200, 20, "rgb(0, 255, 0)");
+            sceneList.push(newRectangleInstance);
+            sceneList.push(newRectangleInstance2);
+            updateAndDraw();
+        }
+
+        function updateAndDraw() {
+            console.log(currentFrameNumber++);
+            const red = Math.random() * 255;
+            const green = Math.random() * 255;
+            const blue = Math.random() * 255;
+            sceneList.push(new Rectangle(
+                Math.random() * 450 - 150,
+                Math.random() * 250 - 100,
+                `rgb(${red}, ${green}, ${blue})`));
+            sceneList.forEach(function(rectangle) {
+                rectangle.draw();
+            });
+            updateStats();
+            requestAnimationFrame(updateAndDraw);
+        }
+
+        function updateStats() {
+            let p = document.getElementById("frameCount");
+            p.innerText = "Frame Count: " + currentFrameNumber;
+
+            p = document.getElementById("rectangleCount");
+            p.innerText = "Rectangles Count: " + sceneList.length;
+        }
+
+        function Rectangle(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.color = color;
+
+            this.draw = function() {
+                const ctx = canvas.getContext("2d");
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, 75, 50);
+                ctx.strokeRect(this.x, this.y, 75, 50);
+            }
+        }
+    </script>
+</head>
+<body onLoad="init()">
+    <canvas id="myCanvas" style="width: 300px; height: 200px; border: 1px solid gray;"></canvas>
+    <br>
+    <button>Change Spawn Color</button>
+    <br>
+    <p id="frameCount">Frame Count: 0</p>
+    <p id="rectangleCount">Rectangle Count: 0</p>
+</body>
+</html>
