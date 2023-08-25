@@ -7,12 +7,14 @@
 
     <script>
         let canvas;
+        let ctx;
         let currentFrameNumber = 0;
         const sceneList = [];
 
         function init() {
-            console.log("Hello world!")
             canvas = document.getElementById("myCanvas");
+            ctx = canvas.getContext("2d");
+            console.log("Hello world!")
             const newRectangleInstance = new Rectangle(20, 20, "rgb(0, 255, 0)");
             const newRectangleInstance2 = new Rectangle(200, 20, "rgb(0, 255, 0)");
             sceneList.push(newRectangleInstance);
@@ -21,6 +23,7 @@
         }
 
         function updateAndDraw() {
+            ctx.clearRect(0, 0, 300, 200);
             console.log(currentFrameNumber++);
             const red = Math.random() * 255;
             const green = Math.random() * 255;
@@ -29,9 +32,13 @@
                 Math.random() * 450 - 150,
                 Math.random() * 250 - 100,
                 `rgb(${red}, ${green}, ${blue})`));
-            sceneList.forEach(function(rectangle) {
-                rectangle.draw();
-            });
+            for (let i = 0; i < sceneList.length; i++) {
+                sceneList[i].draw();
+                sceneList[i].update();
+                if (sceneList[i].y >= 150) {
+                    sceneList.splice(i, 1)
+                }
+            }
             updateStats();
             requestAnimationFrame(updateAndDraw);
         }
@@ -48,14 +55,26 @@
             this.x = x;
             this.y = y;
             this.color = color;
+            this.velocity = {
+                x: 0,
+                y: 0
+            }
+        }
 
-            this.draw = function() {
-                const ctx = canvas.getContext("2d");
+        const RectanglePrototype = {
+            draw: function() {
+                
                 ctx.fillStyle = this.color;
                 ctx.fillRect(this.x, this.y, 75, 50);
                 ctx.strokeRect(this.x, this.y, 75, 50);
+            },
+            update: function() {
+                this.velocity.y++;
+                this.y = this.y + this.velocity.y * 0.16;
             }
         }
+
+        Rectangle.prototype = RectanglePrototype;
     </script>
 </head>
 <body onLoad="init()">

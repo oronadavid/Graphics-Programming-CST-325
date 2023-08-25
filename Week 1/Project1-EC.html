@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script>
+        let canvas;
+        let ctx;
+        let currentFrameNumber = 0;
+        const sceneList = [];
+        let color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+        let lastSpawnPoint = {
+            x: 150,
+            y: 75
+        }
+        const trueSpawnPoint = {
+            x: 150,
+            y: 75
+        };
+
+        function init() {
+            canvas = document.getElementById("myCanvas");
+            ctx = canvas.getContext("2d");
+            console.log("Hello world!")
+            updateAndDraw();
+        }
+
+        function updateAndDraw() {
+            ctx.clearRect(0, 0, 300, 200);
+            console.log(currentFrameNumber++);
+            if (currentFrameNumber % 200 == 0) {
+                changeSpawnPoint();
+            }
+            const xPos = Math.random() * 50 - 25 + ((trueSpawnPoint.x - lastSpawnPoint.x) / 200) * (currentFrameNumber % 200) + lastSpawnPoint.x;
+            const yPos = Math.random() * 50 - 25 + ((trueSpawnPoint.y - lastSpawnPoint.y) / 200) * (currentFrameNumber % 200) + lastSpawnPoint.y;
+            sceneList.push(new Rectangle(
+                xPos,
+                yPos,
+                // Math.random() * 450 - 150,
+                // Math.random() * 250 - 100,
+                color));
+            
+            for (let i = 0; i < sceneList.length; i++) {
+                sceneList[i].draw();
+                sceneList[i].update();
+                sceneList[i].changeSize();
+                if (sceneList[i].y >= 150) {
+                    sceneList.splice(i, 1)
+                }
+            }
+            updateStats();
+            requestAnimationFrame(updateAndDraw);
+        }
+
+        function updateStats() {
+            let p = document.getElementById("frameCount");
+            p.innerText = "Frame Count: " + currentFrameNumber;
+
+            p = document.getElementById("rectangleCount");
+            p.innerText = "Rectangles Count: " + sceneList.length;
+        }
+
+        function changeColor() {
+            color = `rgb(${Math.random() * 255}, ${Math.random() * 255}, ${Math.random() * 255})`;
+        }
+
+        function changeSpawnPoint() {
+            lastSpawnPoint = {...trueSpawnPoint};
+            // trueSpawnPoint.x = Math.random() * 450 - 150;
+            // trueSpawnPoint.y = Math.random() * 250 - 100;
+            trueSpawnPoint.x = Math.random() * 300;
+            trueSpawnPoint.y = Math.random() * 150;
+        }
+
+        function Rectangle(x, y, color) {
+            this.x = x;
+            this.y = y;
+            this.horizontalSize = 50;
+            this.verticalSize = 37;
+            this.color = color;
+            this.velocity = {
+                x: 0,
+                y: 0
+            }
+        }
+
+        const RectanglePrototype = {
+            draw: function() {
+                ctx.fillStyle = this.color;
+                ctx.fillRect(this.x, this.y, this.horizontalSize, this.verticalSize);
+                ctx.strokeRect(this.x, this.y, this.horizontalSize, this.verticalSize);
+            },
+            update: function() {
+                this.velocity.y++;
+                this.y = this.y + this.velocity.y * 0.16;
+            },
+            changeSize: function() {
+                this.horizontalSize = this.horizontalSize * .97;
+                this.verticalSize = this.verticalSize * .97;
+            }
+        }
+
+        Rectangle.prototype = RectanglePrototype;
+    </script>
+</head>
+<body onLoad="init()">
+    <canvas id="myCanvas" style="width: 300px; height: 200px; border: 1px solid gray;"></canvas>
+    <br>
+    <button onclick="changeColor()">Change Spawn Color</button>
+    <br>
+    <p id="frameCount">Frame Count: 0</p>
+    <p id="rectangleCount">Rectangle Count: 0</p>
+</body>
+</html>
