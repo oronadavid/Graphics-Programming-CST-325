@@ -108,37 +108,39 @@ Vector3.prototype = {
   },
 
 
-    //----------------------------------------------------------------------------- 
-    fromTo: function(fromPoint, toPoint) {
-      if (!(fromPoint instanceof Vector3) || !(toPoint instanceof Vector3)) {
-        console.error("fromTo requires to vectors: 'from' and 'to'");
-      }
-      // todo - return the vector that goes from "fromPoint" to "toPoint"
-      //        NOTE - "fromPoint" and "toPoint" should not be altered
-    },
-  
-    //----------------------------------------------------------------------------- 
-    rescale: function(newScale) {
-      // todo - Change this vector's length to be newScale
-      return this;
-    },
-  
-    //----------------------------------------------------------------------------- 
-    angle: function(v1, v2) {
-      // todo - calculate the angle in degrees between vectors v1 and v2. Do NOT
-      //        change any values on the vectors themselves
-      return 0;
-    },
-  
-    //----------------------------------------------------------------------------- 
-    project: function(vectorToProject, otherVector) {
-      // todo - return a vector that points in the same direction as "otherVector"
-      //        but whose length is the projection of "vectorToProject" onto "otherVector"
-      //        NOTE - "vectorToProject" and "otherVector" should NOT be altered (i.e. use clone)
-      //        See "Vector Projection Slides" under "Extras" for more info.
-  
+ //============================================================================= 
+  // The functions below must be completed in order to receive an "A"
+
+  //----------------------------------------------------------------------------- 
+  fromTo: function(fromPoint, toPoint) {
+    if (!(fromPoint instanceof Vector3) || !(toPoint instanceof Vector3)) {
+      console.error("fromTo requires to vectors: 'from' and 'to'");
     }
-  };
-  
-   
-  
+    // todo - return the vector that goes from "fromPoint" to "toPoint"
+    //        NOTE - "fromPoint" and "toPoint" should not be altered
+  },
+
+  //----------------------------------------------------------------------------- 
+  rescale: function(newScale) {
+    // todo - Change this vector's length to be newScale
+    return this;
+  },
+
+  //----------------------------------------------------------------------------- 
+  angle: function(v1, v2) {
+    // todo - calculate the angle in degrees between vectors v1 and v2. Do NOT
+    //        change any values on the vectors themselves
+    return 0;
+  },
+
+  //----------------------------------------------------------------------------- 
+  project: function(vectorToProject, otherVector) {
+    // todo - return a vector that points in the same direction as "otherVector"
+    //        but whose length is the projection of "vectorToProject" onto "otherVector"
+    //        NOTE - "vectorToProject" and "otherVector" should NOT be altered (i.e. use clone)
+    //        See "Vector Projection Slides" under "Extras" for more info.
+
+  }
+};
+
+ 
