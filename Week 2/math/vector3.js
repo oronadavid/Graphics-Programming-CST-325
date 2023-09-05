@@ -76,7 +76,7 @@ Vector3.prototype = {
   length: function() {
     // todo - return the magnitude (A.K.A. length) of 'this' vector
     // This should NOT change the values of this.x, this.y, and this.z
-    totalSquared = this.x * this.x + this.y * this.y + this.z * this.z;
+    const totalSquared = this.x * this.x + this.y * this.y + this.z * this.z;
     return Math.sqrt(totalSquared);
   },
 
@@ -95,7 +95,7 @@ Vector3.prototype = {
   normalize: function() {
     // todo - Change the components of this vector so that its magnitude will equal 1.
     // This SHOULD change the values of this.x, this.y, and this.z
-    magnitude = this.length();
+    const magnitude = this.length();
     this.x /= magnitude; this.y /= magnitude; this.z /= magnitude;
     return this;
   },
@@ -108,7 +108,7 @@ Vector3.prototype = {
   },
 
 
- //============================================================================= 
+  //============================================================================= 
   // The functions below must be completed in order to receive an "A"
 
   //----------------------------------------------------------------------------- 
@@ -118,11 +118,14 @@ Vector3.prototype = {
     }
     // todo - return the vector that goes from "fromPoint" to "toPoint"
     //        NOTE - "fromPoint" and "toPoint" should not be altered
+    return new Vector3(toPoint.x - fromPoint.x, toPoint.y - fromPoint.y, toPoint.z - fromPoint.z);
   },
 
   //----------------------------------------------------------------------------- 
   rescale: function(newScale) {
     // todo - Change this vector's length to be newScale
+    this.normalize();
+    this.multiplyScalar(newScale);
     return this;
   },
 
@@ -130,7 +133,10 @@ Vector3.prototype = {
   angle: function(v1, v2) {
     // todo - calculate the angle in degrees between vectors v1 and v2. Do NOT
     //        change any values on the vectors themselves
-    return 0;
+    const cosineTheta = v1.dot(v2) / (v1.length() * v2.length());
+    const thetaRad = Math.acos(cosineTheta);
+    const thetaDeg = (thetaRad * 180) / Math.PI;
+    return thetaDeg;
   },
 
   //----------------------------------------------------------------------------- 
@@ -139,8 +145,9 @@ Vector3.prototype = {
     //        but whose length is the projection of "vectorToProject" onto "otherVector"
     //        NOTE - "vectorToProject" and "otherVector" should NOT be altered (i.e. use clone)
     //        See "Vector Projection Slides" under "Extras" for more info.
-
+    const scale = vectorToProject.dot(otherVector) / (otherVector.length() * otherVector.length());
+    const scaledVector = new Vector3(otherVector.x, otherVector.y, otherVector.z);
+    scaledVector.multiplyScalar(scale);
+    return scaledVector;
   }
 };
-
- 
