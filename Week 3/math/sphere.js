@@ -55,9 +55,10 @@ Sphere.prototype = {
     // 1. review slides/book math
     
     // 2. identity the vectors needed to solve for the coefficients in the quadratic equation
+
       const a = r1.direction.dot(r1.direction);
-      const b = r1.direction.multiplyScalar(2).dot(r1.origin.subtract(this.center));
-      const c = r1.origin.subtract(this.center).dot(r1.origin.subtract(this.center)) - this.radius * this.radius;
+      const b = r1.direction.clone().multiplyScalar(2).dot(new Vector3(r1.origin.x - this.center.x, r1.origin.y - this.center.y, r1.origin.z - this.center.z));
+      const c = new Vector3(r1.origin.x - this.center.x, r1.origin.y - this.center.y, r1.origin.z - this.center.z).dot(new Vector3(r1.origin.x - this.center.x, r1.origin.y - this.center.y, r1.origin.z - this.center.z)) - this.radius * this.radius;
 
     // 3. calculate the discriminant
       const discriminant = b * b - 4 * a * c;
@@ -65,12 +66,14 @@ Sphere.prototype = {
     // 4. use the discriminant to determine if further computation is necessary 
     //    if (discriminant...) { ... } else { ... }
     console.log("discriminant: " + discriminant);
-    // if (discriminant == 0) {
-    //   return {
-    //     hit: false,
-    //     point: null
-    //   }
-    // }
+    let quadraticResult1, quadraticResult2, firstIntersection;
+    if (discriminant == 0) {
+      firstIntersection = -b / (2 * a);
+    } else {
+      quadraticResult1 = (-b + Math.sqrt(b * b - 4 * a * c)) / 2 * a;
+      quadraticResult2 = (-b - Math.sqrt(b * b - 4 * a * c)) / 2 * a;
+      firstIntersection = Math.min(quadraticResult1, quadraticResult2);
+    }
 
 
     // 5. return the following object literal "result" based on whether the intersection
@@ -85,20 +88,13 @@ Sphere.prototype = {
     //        normal: 'a vector3 containing a unit length normal at the intersection point',
     //        distance: 'a scalar containing the intersection distance from the ray origin'
     //      }
-    const quadraticResult1 = (-b + Math.sqrt(b * b - 4 * a * c)) / 2 * a;
-    const quadraticResult2 = (-b - Math.sqrt(b * b - 4 * a * c)) / 2 * a;
 
-    print("q1: " + quadraticResult1);
-    print("q2: " + quadraticResult2);
-
-    const firstIntersection = Math.min(quadraticResult1, quadraticResult2);
-
-    const normalV = r1.direction.clone().subtract(this.center).normalize();
+    const normalV = r1.direction.clone().normalize();
 
 
-    if (quadraticResult1 > 0) {
+    if (firstIntersection > 0) {
       const point = normalV.clone().multiplyScalar(firstIntersection).add(r1.origin);
-      const normal = point.subtract(this.center);
+      const normal = point.clone().subtract(this.center).normalize();
 
       return {
         hit: true,
