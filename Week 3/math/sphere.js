@@ -57,19 +57,20 @@ Sphere.prototype = {
     // 2. identity the vectors needed to solve for the coefficients in the quadratic equation
       const a = r1.direction.dot(r1.direction);
       const b = r1.direction.multiplyScalar(2).dot(r1.origin.subtract(this.center));
-      const c = r1.origin.subtract(this.center).dot(r1.origin.subtract(this.center));
+      const c = r1.origin.subtract(this.center).dot(r1.origin.subtract(this.center)) - this.radius * this.radius;
 
     // 3. calculate the discriminant
       const discriminant = b * b - 4 * a * c;
     
     // 4. use the discriminant to determine if further computation is necessary 
     //    if (discriminant...) { ... } else { ... }
-    if (discriminant < 0) {
-      return {
-        hit: false,
-        point: null
-      }
-    }
+    console.log("discriminant: " + discriminant);
+    // if (discriminant == 0) {
+    //   return {
+    //     hit: false,
+    //     point: null
+    //   }
+    // }
 
 
     // 5. return the following object literal "result" based on whether the intersection
@@ -86,13 +87,32 @@ Sphere.prototype = {
     //      }
     const quadraticResult1 = (-b + Math.sqrt(b * b - 4 * a * c)) / 2 * a;
     const quadraticResult2 = (-b - Math.sqrt(b * b - 4 * a * c)) / 2 * a;
+
+    print("q1: " + quadraticResult1);
+    print("q2: " + quadraticResult2);
+
+    const firstIntersection = Math.min(quadraticResult1, quadraticResult2);
+
+    const normalV = r1.direction.clone().subtract(this.center).normalize();
+
+
     if (quadraticResult1 > 0) {
+      const point = normalV.clone().multiplyScalar(firstIntersection).add(r1.origin);
+      const normal = point.subtract(this.center);
+
       return {
         hit: true,
-        point: r1.direction.multiplyScalar(quadraticResult1)
+        point: point,
+        normal: normal,
+        distance: firstIntersection
       }
     }
 
+
+    return {
+      hit: false,
+      normal: new Vector3(1,0,0)
+    }
     // An object created from a literal that we will return as our result
     // Replace the null values in the properties below with the right values
     var result = {
