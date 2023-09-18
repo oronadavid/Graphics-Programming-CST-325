@@ -76,7 +76,7 @@ function generateRayForPixel(xPixelIndex, yPixelIndex) {
 	var pixelX = -1 + pixelHalfWidth + pixelWidth * xPixelIndex;
 	var pixelY = 1 - pixelHalfWidth - pixelWidth * yPixelIndex;
 	var pixelCoordinate = new Vector3(pixelX, pixelY, 0);
-
+	
 	var direction = pixelCoordinate.clone().subtract(eyeCoordinate); // = vector from the eye to the pixel
 
 	// Creates a ray from the eye toward the pixelCoordinate
@@ -105,9 +105,8 @@ function updateAndRender(timeElapsed) {
 			var pixelRay = generateRayForPixel(xPixelIndex, yPixelIndex);
 
 			// The larget absolute value of the x component in our ray's direction
-			var maxValue = Math.sin(Math.sqrt(2) / 4);
 
-			setPixelColor(xPixelIndex, yPixelIndex, Math.abs(pixelRay.direction.x) / maxValue);
+			// setPixelColor(xPixelIndex, yPixelIndex, Math.abs(pixelRay.direction.x) / maxValue);
 
 
 			// See if the ray intersects the sphere or the plane (or every object in our scene)
@@ -117,12 +116,21 @@ function updateAndRender(timeElapsed) {
 
 			// determine which hit object is the closest (in case there is more than 1 hit)
 
-			//if we hit something {
-				setPixelColor(xPixelIndex, yPixelIndex, 0.5); // middle gray
-			//} else {
+			// if we hit something
+			if (sphereResult.hit == true && planeResult.hit == true) {
+				if (sphereResult.distance < planeResult.distance) {
+					setPixelColor(xPixelIndex, yPixelIndex, 0.8); // middle gray
+				} else {
+					setPixelColor(xPixelIndex, yPixelIndex, 0.5); 
+				}
+			} else if (sphereResult.hit == true) {
+				setPixelColor(xPixelIndex, yPixelIndex, 0.8); // middle gray
+			} else if (planeResult.hit == true) {
+				setPixelColor(xPixelIndex, yPixelIndex, 0.5);
+			} else {
 				// we didn't hit anything, choose an appropriate backbround color
 				setPixelColor(xPixelIndex, yPixelIndex, 0.1); // dark gray
-			//}
+			}
 		}
 	}
 
