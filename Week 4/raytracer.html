@@ -70,6 +70,8 @@ var plane = new Plane(new Vector3(0, 1, 0), new Vector3(0, -.25, 0)); // todo = 
 
 // end of raytracer setup ******************************************************
 
+const lightSource = new Vector3(1, 0, 0);
+
 // -----------------------------------------------------------------------------
 // return a ray that goes from the eye point through the pixel at index (xPixelIndex, yPixelIndex)
 function generateRayForPixel(xPixelIndex, yPixelIndex) {
@@ -115,22 +117,28 @@ function updateAndRender(timeElapsed) {
 			var planeResult = plane.raycast(pixelRay);
 
 			// determine which hit object is the closest (in case there is more than 1 hit)
-
 			// if we hit something
-			if (sphereResult.hit == true && planeResult.hit == true) {
-				if (sphereResult.distance < planeResult.distance) {
-					setPixelColor(xPixelIndex, yPixelIndex, 0.8); // middle gray
-				} else {
-					setPixelColor(xPixelIndex, yPixelIndex, 0.5); 
-				}
-			} else if (sphereResult.hit == true) {
-				setPixelColor(xPixelIndex, yPixelIndex, 0.8); // middle gray
-			} else if (planeResult.hit == true) {
-				setPixelColor(xPixelIndex, yPixelIndex, 0.5);
-			} else {
-				// we didn't hit anything, choose an appropriate backbround color
-				setPixelColor(xPixelIndex, yPixelIndex, 0.1); // dark gray
+
+			// Set default background color
+			let surfaceToLight, normalDotLight = .3;
+
+			// Sphere lighting
+			if (sphereResult.hit == true) {
+					surfaceToLight = lightSource.clone().subtract(sphereResult.point).normalize();
+					normalDotLight = sphereResult.normal.clone().dot(surfaceToLight);
 			}
+			
+			// Plane lighting
+			if (planeResult.hit == true) {
+				// Do not redraw pixel if the sphere is closer (and so has already been calculated)
+				if (planeResult.distance < sphereResult.distance || sphereResult.hit == false) {
+					surfaceToLight = lightSource.clone().subtract(planeResult.point).normalize();
+					normalDotLight = planeResult.normal.clone().dot(surfaceToLight);
+				}
+			}
+
+			// Draw pixel
+			setPixelColor(xPixelIndex, yPixelIndex, normalDotLight);
 		}
 	}
 
