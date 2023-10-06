@@ -232,7 +232,7 @@ Matrix4.prototype = {
     var fovyRads = fovy * Math.PI / 180;
 
     // todo -compute t (top) and r (right)
-    const t = aspect / 2;
+    const t = near * Math.tan(fovyRads / 2);
     const r = t * aspect;
 
     // shortcut - use in place of this.elements
