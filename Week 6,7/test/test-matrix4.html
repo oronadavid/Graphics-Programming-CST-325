@@ -604,6 +604,10 @@
       ];
       expected.elements = Float32Array.from(values);
 
+      console.log("expected matrix:");
+      console.log(expected);
+      console.log("my matrix:");
+      console.log(m1);
       try {
         assert(matrix4Equal(m1, expected, "earth matrix not correct"));
         reporter.reportTestEnd(true);

@@ -277,8 +277,7 @@ Matrix4.prototype = {
     //        2) rotation, and 3) translation. The values of translation, rotation,
     //        and scale should NOT be modified.
 
-    var trsMatrix = new Matrix4();
-    return trsMatrix;
+    return new Matrix4().multiply(translation).multiply(rotation).multiply(scale);
   },
 
   // -------------------------------------------------------------------------
@@ -296,6 +295,14 @@ Matrix4.prototype = {
     // Note: Do NOT change earthTransform but do use it, it already has the rotation and translation for the earth
 
     var moonMatrix = new Matrix4();
+    // const earthTransformMatrix = new Matrix4.multiply(earthTransform);
+    // const offsetFromEarthMatrix = new Matrix4().makeTranslation(offsetFromEarth);
+    // const rotationMatrix = new Matrix4.makeRotationX(currentRotationAngle);
+
+    // const TRSMatrix = createTRSMatrix()
+
+    // moonMatrix.multiply(new Matrix4().makeRotationZ(currentRotationAngle)).multiply(new Matrix4().makeTranslation(offsetFromEarth).multiply(earthTransform));
+    moonMatrix.multiply(new Matrix4().makeRotationZ(currentRotationAngle)).multiply(new Matrix4().makeTranslation(offsetFromEarth).multiply(earthTransform));
 
     // todo - combine all necessary matrices necessary to achieve the desired effect
 
