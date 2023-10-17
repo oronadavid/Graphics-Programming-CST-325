@@ -34,6 +34,8 @@
 	<!-- fragment shader - Pixel color is determined here -->
 	<script id="shader-fs" type="x-shader/x-fragment">
     precision mediump float;
+	
+	uniform float uTime;
 
     varying vec3 vColor;
 
@@ -161,6 +163,7 @@
 			shaderProgram.worldMatrixUniform = gl.getUniformLocation(shaderProgram, "uWorldMatrix");
 			shaderProgram.viewMatrixUniform = gl.getUniformLocation(shaderProgram, "uViewMatrix");
 			shaderProgram.projectionMatrixUniform = gl.getUniformLocation(shaderProgram, "uProjectionMatrix");
+			shaderProgram.timeUniform = gl.getUniformLocation(shaderProgram, "uTime");
 		}
 
 		// -------------------------------------------------------------------------
@@ -173,7 +176,6 @@
 
 			if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
 				alert(gl.getShaderInfoLog(shader));
-				console.log(gl.getShaderInfoLog(shader));
 				return null;
 			}
 			return shader;
@@ -213,9 +215,9 @@
 			var colorBuffer = gl.createBuffer();
 			gl.bindBuffer(gl.ARRAY_BUFFER, colorBuffer);
 			var color = [
-				1.0, 0.0, 0.0,
-				0.0, 1.0, 0.0,
-				0.0, 0.0, 1.0
+			(Math.sin(time.secondsElapsedSinceStart) / 2) + .5, 0.0, (Math.cos(time.secondsElapsedSinceStart) / 2) + .5,
+			(Math.cos(time.secondsElapsedSinceStart) / 2) + .5, 1.0, 0.0,
+				0.0, (Math.cos(time.secondsElapsedSinceStart) / 2), 1.0
 			];
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(color), gl.STATIC_DRAW);
 			triangleGeometry.colorBuffer = colorBuffer;
@@ -241,7 +243,6 @@
 				// add position for line end point (x value should be i)
 				linePositions.push(i, -1, 10);
 			}
-			console.log(linePositions);
 
 			// specify the lateral lines
 			for (var i = -10; i <= 10; ++i) {
@@ -282,6 +283,7 @@
 			gl.clear(gl.COLOR_BUFFER_BIT | gl.DEPTH_BUFFER_BIT);
 
 			renderTriangle(time.secondsElapsedSinceStart);
+			createTriangleGeometry();
 			time.secondsElapsedSinceStart += 1 / 60;
 			renderLines();
 		}
@@ -331,6 +333,7 @@
 			gl.uniformMatrix4fv(shaderProgram.worldMatrixUniform, false, triangleGeometry.worldMatrix.clone().transpose().elements);
 			gl.uniformMatrix4fv(shaderProgram.viewMatrixUniform, false, viewMatrix.clone().transpose().elements);
 			gl.uniformMatrix4fv(shaderProgram.projectionMatrixUniform, false, projectionMatrix.clone().transpose().elements);
+			gl.uniform1f(shaderProgram.timeUniform, time.secondsElapsedSinceStart);
 
 			gl.drawArrays(gl.TRIANGLES, 0, triangleGeometry.bufferItemCount);
 		}
@@ -361,6 +364,7 @@
 			gl.uniformMatrix4fv(shaderProgram.worldMatrixUniform, false, lineGridGeometry.worldMatrix.clone().transpose().elements);
 			gl.uniformMatrix4fv(shaderProgram.viewMatrixUniform, false, viewMatrix.clone().transpose().elements);
 			gl.uniformMatrix4fv(shaderProgram.projectionMatrixUniform, false, projectionMatrix.clone().transpose().elements);
+			gl.uniform1f(shaderProgram.timeUniform, time.secondsElapsedSinceStart);
 
 			// --------------------------------------------
 			// below is done for you, uncomment when ready
