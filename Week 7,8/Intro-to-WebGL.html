@@ -80,6 +80,7 @@
 		// -------------------------------------------------------------------------
 		function initializeAndStartRendering() {
 			initGL();
+			gl.enable(gl.DEPTH_TEST);
 
 			// todo #3
 			// uncomment when directed by the guide
@@ -88,7 +89,7 @@
 			createTriangleGeometry();
 
 			// uncomment when directed by the guide
-			// createLineGridGeometry();
+			createLineGridGeometry();
 
 			if (gl) {
 				updateAndRender();
@@ -236,13 +237,18 @@
 			// specify the horizontal lines
 			for (var i = -10; i <= 10; ++i) {
 				// add position for line start point (x value should be i)
+				linePositions.push(i, -1, -10);
 				// add position for line end point (x value should be i)
+				linePositions.push(i, -1, 10);
 			}
+			console.log(linePositions);
 
 			// specify the lateral lines
 			for (var i = -10; i <= 10; ++i) {
 				// add position for line start point (z value should be i)
+				linePositions.push(-10, -1, i);
 				// add position for line end point (z value should be i)
+				linePositions.push(10, -1, i);
 			}
 
 			gl.bufferData(gl.ARRAY_BUFFER, new Float32Array(linePositions), gl.STATIC_DRAW);
@@ -277,7 +283,7 @@
 
 			renderTriangle(time.secondsElapsedSinceStart);
 			time.secondsElapsedSinceStart += 1 / 60;
-			// renderLines();
+			renderLines();
 		}
 
 		// -------------------------------------------------------------------------
@@ -336,19 +342,34 @@
 			// todo update the triangle geometry world matrix here (used to place the triangle into world space)
 			// todo set view matrix to identity
 			// todo set the projection matrix using values from online guide
+			lineGridGeometry.worldMatrix.makeIdentity();
+			viewMatrix.makeIdentity();
+			projectionMatrix.makePerspective(45, gl.canvasWidth / gl.canvasHeight ,0.1, 1000);
 
 			// todo bind and map(gl.vertexAttribPointer) the buffers
+			gl.bindBuffer(gl.ARRAY_BUFFER, lineGridGeometry.positionBuffer);
+			gl.vertexAttribPointer(
+				triangleGeometry.shaderProgram.vertexPositionAttribute,
+				3,
+				gl.FLOAT,
+				gl.FALSE,
+				0, // stride - used for mixing data in a single buffer, ignore
+				0  // offset - used for mixing data in a single buffer, ignore
+			);
 
 			// todo - send matrices to shader
+			gl.uniformMatrix4fv(shaderProgram.worldMatrixUniform, false, lineGridGeometry.worldMatrix.clone().transpose().elements);
+			gl.uniformMatrix4fv(shaderProgram.viewMatrixUniform, false, viewMatrix.clone().transpose().elements);
+			gl.uniformMatrix4fv(shaderProgram.projectionMatrixUniform, false, projectionMatrix.clone().transpose().elements);
 
 			// --------------------------------------------
 			// below is done for you, uncomment when ready
 
 			// todo - you will need to calculate the time elapsed since the start of the program
 			//        and set up the uniform (like other uniforms) or the value below will never change
-			// gl.uniform1f(shaderProgram.timeUniform, time.secondsElapsedSinceStart);
+			gl.uniform1f(shaderProgram.timeUniform, time.secondsElapsedSinceStart);
 
-			// gl.drawArrays(gl.LINES, 0, lineGridGeometry.bufferItemCount);
+			gl.drawArrays(gl.LINES, 0, lineGridGeometry.bufferItemCount);
 		}
 
 	</script>
