@@ -149,7 +149,14 @@ function updateAndRender() {
     gl.uniform4f(colorProgram.uniforms.colorUniform, 0.0, 0.0, 0.0, 1.0);
 
     // todo #9 - animate the color of there sphere
+    let shade = Math.sin(time.secondsElapsedSinceStart) * .5 + .5;
+    gl.uniform4f(colorProgram.uniforms.colorUniform, shade, shade, shade, 1.0);
+
     // todo #10 - animate the color with non-grayscale values
+    let red = 1 - Math.sin(time.secondsElapsedSinceStart - Math.PI) * .9 - .5;
+    let green = 1 - Math.sin(time.secondsElapsedSinceStart + Math.PI / 2) * .5 - .5;
+    let blue = 1 - Math.sin(.5 * time.secondsElapsedSinceStart + Math.PI / 3) * .8 - .7;
+    gl.uniform4f(colorProgram.uniforms.colorUniform, red, green, blue, 1.0);
 
     // todo #3 - render the sphere
     sphereGeometry.render(camera, projectionMatrix, colorProgram);
