@@ -13,7 +13,6 @@ var Sphere = function(center, radius, color) {
 	this.center = center;
 	this.radius = radius;
 	
-
 	if (center == undefined || radius == undefined) {
 		this.center = new Vector3();
 		this.radius = 1;

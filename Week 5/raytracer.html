@@ -128,10 +128,7 @@ function updateAndRender(timeElapsed) {
 			scene.forEach((plane) => {
 				raycastResults.push(plane.raycast(pixelRay));
 			});
-			// var sphereResult = sphere.raycast(pixelRay);
-			// var floorResult = floor.raycast(pixelRay);
 			
-
 			// determine which hit object is the closest (in case there is more than 1 hit)
 			// if we hit something
 
@@ -158,30 +155,7 @@ function updateAndRender(timeElapsed) {
 				}
 			}
 
-			// raycastResults.forEach((raycast) => {
-			// 	if (raycast.hit) {
-			// 		if (raycast.distance < closestLength || closestLength == undefined) {
-			// 			closestLength = raycast.distance;
-			// 			closestObject = raycast
-			// 			surfaceToLight = lightSource.clone().subtract(raycast.point).normalize();
-			// 			normalDotLight = raycast.normal.clone().dot(surfaceToLight);
-
-
-
-
-			// 			// Check for shadow
-			// 			const planeToLightVector = lightSource.clone().subtract(raycast.point);
-			// 			const rayToLight = new Ray(raycast.point, planeToLightVector);
-			// 			const SecondRaycast = sphere.raycast(rayToLight);
-			// 			if (SecondRaycast.hit && SecondRaycast.distance < planeToLightVector.length()) {
-			// 				normalDotLight = 0;
-			// 			}
-			// 		}
-			// 	}
-			// });
-
 			// Draw pixel
-			
 			let color = closestObject.color.clone().multiplyScalar(normalDotLight);
 			setPixelColor(xPixelIndex, yPixelIndex, color);
 		}
