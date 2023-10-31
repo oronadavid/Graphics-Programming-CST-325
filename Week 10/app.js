@@ -159,6 +159,11 @@ function updateAndRender() {
     gl.blendFunc(gl.SRC_ALPHA, gl.ONE_MINUS_SRC_ALPHA);
 
     // todo #10 apply the painter's algorithm
+    sphereGeometryList.sort(function(a, b) {
+        let aPos = a.getPosition();
+        let bPos = b.getPosition();
+        return bPos.z - aPos.z;
+    });
 
     // todo #6
     // uncomment when directed by guide
