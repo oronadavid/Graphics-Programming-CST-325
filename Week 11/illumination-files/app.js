@@ -133,6 +133,30 @@ function updateAndRender() {
 
     // todo #10
     // add keyboard controls for changing light direction here
+    if (appInput.left) {
+        const lightDirectionVector4 = new Vector4(lightDirection.x, lightDirection.y, lightDirection.z, 0);
+        const rotationMatrix = new Matrix4().makeRotationY(-1);
+        const rotatedLight = rotationMatrix.multiplyVector(lightDirectionVector4);
+        lightDirection = new Vector3(rotatedLight.x, rotatedLight.y, rotatedLight.z);
+    }
+    if (appInput.right) {
+        const lightDirectionVector4 = new Vector4(lightDirection.x, lightDirection.y, lightDirection.z, 0);
+        const rotationMatrix = new Matrix4().makeRotationY(1);
+        const rotatedLight = rotationMatrix.multiplyVector(lightDirectionVector4);
+        lightDirection = new Vector3(rotatedLight.x, rotatedLight.y, rotatedLight.z);
+    }
+    if (appInput.up) {
+        const lightDirectionVector4 = new Vector4(lightDirection.x, lightDirection.y, lightDirection.z, 0);
+        const rotationMatrix = new Matrix4().makeRotationX(-1);
+        const rotatedLight = rotationMatrix.multiplyVector(lightDirectionVector4);
+        lightDirection = new Vector3(rotatedLight.x, rotatedLight.y, rotatedLight.z);
+    }
+    if (appInput.down) {
+        const lightDirectionVector4 = new Vector4(lightDirection.x, lightDirection.y, lightDirection.z, 0);
+        const rotationMatrix = new Matrix4().makeRotationX(1);
+        const rotatedLight = rotationMatrix.multiplyVector(lightDirectionVector4);
+        lightDirection = new Vector3(rotatedLight.x, rotatedLight.y, rotatedLight.z);
+    }
 
     time.update();
     camera.update(time.deltaTime);
