@@ -22,14 +22,17 @@ function Camera(input) {
     // -------------------------------------------------------------------------
     this.update = function(dt) {
         var currentForward = this.getForward();
+        var movementPerSecond = 1;
 
         if (input.up) {
             // todo #7 - move the camera position a little bit in its forward direction
             this.cameraPosition = currentForward.add(new Vector3(0, 0, -.05));
+            // this.cameraPosition.add(currentForward.multiplyScalar(movementPerSecond * dt));
         }
 
         if (input.down) {
             // todo #7 - move the camera position a little bit in its backward direction
+            // this.cameraPosition.subtract(currentForward.multiplyScalar(movementPerSecond * dt));
             this.cameraPosition = currentForward.add(new Vector3(0, 0, .05));
         }
 
