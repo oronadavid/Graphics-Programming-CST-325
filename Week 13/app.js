@@ -227,7 +227,7 @@ function updateAndRender () {
 	// reasonably close position such that the scene will be in the view volume.
 	// We will set up the view volume boundaries with an orthographics projection later.
 	var eye = new Vector4(5, 3, 0, 1);
-	lightCamera.cameraWorldMatrix.makeLookAt(eye, lightTarget, up);
+	lightCamera.cameraWorldMatrix.makeLookAt(lightPos, lightTarget, up);
 	camera.update(time.deltaTime);
 
 	// render scene depth to texture ################## 
