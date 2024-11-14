@@ -8,6 +8,7 @@ function Input() {
     this.d = false;
     this.w = false;
     this.f = false;
+    this.space = false;
 
     // -------------------------------------------------------------------------
     function onKeyUp(e) {
@@ -33,6 +34,7 @@ function Input() {
         if (e.key == "d") { this.d = true; }
         if (e.key == "f") { this.f = true; }
         if (e.key == "w") { this.w = true; }
+        if (e.key = "Space") {this.space = !this.space; }
 	}
 
 	window.addEventListener('keydown', onKeyDown.bind(this));

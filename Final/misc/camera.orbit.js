@@ -4,12 +4,13 @@ function OrbitCamera(input) {
     this.yawDegrees = 0;
     this.pitchDegrees = -45;
     this.minDistance = 1;
-    this.maxDistance = 30;
-    this.zoomScale = 1;
+    this.maxDistance = 10;
+    this.zoomScale = 5;
 
     var lastMouseX = 0;
     var lastMouseY = 0;
     var isDragging = false;
+    var appInput = new Input();
 
     // -------------------------------------------------------------------------
     this.getViewMatrix = function () {
@@ -45,7 +46,7 @@ function OrbitCamera(input) {
     }
 
     // -------------------------------------------------------------------------
-    this.update = function (dt, secondsElapsedSinceStart) {
+    this.update = function (dt, earthPosition) {
         // Extract the basis vector corresponding to forward
         var currentForward = new Vector3(
             this.cameraWorldMatrix.elements[2],
@@ -60,8 +61,14 @@ function OrbitCamera(input) {
         var transformedTether = pitch.multiplyVector(tether);
         transformedTether = yaw.multiplyVector(transformedTether);
 
-        var position = this.cameraTarget.clone().add(transformedTether);
-        this.lookAt(position, new Vector4(0, 0, 0, 1));
+        if (appInput.space) {
+            var position = earthPosition.clone().add(transformedTether);
+            this.lookAt(position, earthPosition);
+        } else {
+            var position = this.cameraTarget.clone().add(transformedTether);
+            this.lookAt(position, new Vector4(0, 0, 0, 1));
+        }
+        
     }
 
     // -------------------------------------------------------------------------
